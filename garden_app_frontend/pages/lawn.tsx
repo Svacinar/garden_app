@@ -56,9 +56,9 @@ const Lawn: NextPage = () => {
                     <Heading size='md'>Data Loaded</Heading> : <Heading size='md'>Loading data...</Heading>
                 }
                 <Flex>
-                    {Object.keys(data).map(connection => {
+                    {Object.keys(data).map((connection, id) => {
                         return (
-                            <div>
+                            <div key={id}>
                                 <Table>
                                     <TableCaption placement='top'>Valve state for {connection}</TableCaption>
                                     <Thead>
@@ -70,10 +70,10 @@ const Lawn: NextPage = () => {
                                             <Th>ON/OFF</Th>
                                         </Tr>
                                     </Thead>
-                                    {data[connection].map((valve) => {
+                                    {data[connection].map((valve, id) => {
                                         console.log(JSON.stringify(valve));
                                         return (
-                                            <Tbody>
+                                            <Tbody key={id}>
                                                 <Tr>
                                                     <Td>{valve.name}</Td>
                                                     <Td >{String(valve.status)}</Td>

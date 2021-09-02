@@ -6,7 +6,7 @@ type Data = {
 }
 
 const login: NextApiHandler = async (req, res) => {
-    const result = await axios.get('http://localhost:3000/valves');
+    const result = await axios.get(`${process.env.BACKEND_API_URL}/valves`);
     res.status(200).send(result.data);
 }
 

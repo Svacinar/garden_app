@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  garden_app_backend:
+    build:
+      context: ./garden_app_backend
+      dockerfile: Dockerfile
+    env_file:
+      ./garden_app_backend/.env
+    ports:
+      - 3000:3000
+  garden_app_frontend:
+    build:
+      context: ./garden_app_frontend
+      dockerfile: Dockerfile
+    environment:
+      BACKEND_API_URL: http://garden_app_backend:3000
+    ports:
+      - 80:3001
