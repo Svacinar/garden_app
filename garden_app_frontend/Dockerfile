@@ -1,10 +1,10 @@
-FROM node:alpine
+FROM arm32v7/node:14.14.0-alpine
 
 WORKDIR /usr/garden_app_frontend
 
-COPY ./packege.*json ./
+COPY ./package.*json ./
 
-RUN npm install
+RUN npm install --only=prod
 
 COPY . .
 
