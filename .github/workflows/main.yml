@@ -14,7 +14,7 @@ jobs:
 
       - name: Login to Github Container Registry
         run: | 
-          echo "${{ secrets.PASSWORD}}" | docker login ghcr.io -u "${{USERNAME}}" --password-stdin
+          echo "${{ secrets.PASSWORD}}" | docker login ghcr.io -u "${{ secrets.USERNAME }}" --password-stdin
 
       - name: set up docker buildx
         id: buildx
