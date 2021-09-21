@@ -4,7 +4,7 @@ WORKDIR /usr/garden_app_frontend
 
 COPY ./package.*json ./
 
-RUN npm install --only=prod
+RUN npm install
 
 COPY . .
 
