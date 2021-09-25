@@ -1,100 +1,54 @@
 import {
-    Button, Flex, Table,
-    Thead,
-    Tbody,
-    Tfoot,
+    Flex,
     Heading,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    Switch,
+
 } from '@chakra-ui/react';
 import axios from 'axios';
+import ValveTable from '../components/ValveTable';
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
+import Valve from '../components/Valve';
 
 const Lawn: NextPage = () => {
     const [isLoaded, setIsLoaded] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData]: [any, any] = useState({});
+    const [isError, setIsError] = useState(false);
+    const [valveData, setValveData]: [any, any] = useState({});
     useEffect(() => {
-        stateUpdater()
-    }, [])
+        const intervalId = setInterval(stateUpdater, 2000);
+        return () => clearInterval(intervalId);
+    }, []);
 
-    const stateUpdater = () => {
-        setIsLoading(true);
-        axios.get('api/lawnHandler')
-            .then((data) => {
-                console.log(data.data);
-                setData(data.data);
-
-            })
-            .then(() => setIsLoaded(true))
-            .then(() => console.log(data))
-            .then(() => setIsLoading(false))
-            .catch(err => console.log(err))
-        setTimeout(() => console.log('test'), 5000);
+    const stateUpdater = async () => {
+        try {
+            const result = await axios.get('api/getValvesData');
+            setValveData(result.data);
+            setIsError(false);
+            setIsLoaded(true);
+        } catch (error) {
+            setIsError(true);
+        }
     }
 
-    const handleStateChange = async (valve) => {
-        console.log(valve);
-        const body = {
-            valveId: 0,
-            state: true,
-            timer: 6000
-        }
-        const response = await axios.post('http://192.168.0.102/valve', body);
-        console.log(response);
-
+    const handleStateChange = (valve: Valve, id: number) => {
+        const newValveState = {
+            valveId: id,
+            state: !valve.status,
+            timer: valve.timer,
+        };
+        const endpoint = valve.endpoint;
+        axios.post('api/setValveState', {
+            newValveState,
+            endpoint,
+        });
     }
 
     return (
         <Flex height="80vh" alignItems="center" justifyContent="center">
             <Flex alignItems="center" direction="column" border='5px solid' borderColor='gray.100' p={12} rounded={6}>
-                {isLoaded ?
-                    <Heading size='md'>Data Loaded</Heading> : <Heading size='md'>Loading data...</Heading>
-                }
-                <Flex>
-                    {Object.keys(data).map((connection, id) => {
-                        return (
-                            <div key={id}>
-                                <Table>
-                                    <TableCaption placement='top'>Valve state for {connection}</TableCaption>
-                                    <Thead>
-                                        <Tr>
-                                            <Th>Name</Th>
-                                            <Th>Status</Th>
-                                            <Th>Timer</Th>
-                                            <Th>Endpoint</Th>
-                                            <Th>ON/OFF</Th>
-                                        </Tr>
-                                    </Thead>
-                                    {data[connection].map((valve, id) => {
-                                        console.log(JSON.stringify(valve));
-                                        return (
-                                            <Tbody key={id}>
-                                                <Tr>
-                                                    <Td>{valve.name}</Td>
-                                                    <Td >{String(valve.status)}</Td>
-                                                    <Td>{valve.timer}</Td>
-                                                    <Td>{valve.endpoint}</Td>
-                                                    <Td>
-                                                        <Switch colorScheme='teal' size='lg' onClick={() => handleStateChange(valve)} />
-                                                    </Td>
-                                                </Tr>
-                                            </Tbody>
-
-                                        )
-                                    })}
-                                </Table>
-
-
-                            </div>
-                        )
-                    })}
-                </Flex>
-                <Button margin="8px" isLoading={isLoading} colorScheme="teal" onClick={stateUpdater}>Update Data</Button>
+                {console.log(valveData)}
+                {isLoaded ? <ValveTable valveData={valveData} handleStateChange={handleStateChange} />
+                    : isError ? <Heading size='md'>Something went wrong...</Heading>
+                        : <Heading size='md'>Loading data...</Heading>}
             </Flex >
         </Flex >
     )

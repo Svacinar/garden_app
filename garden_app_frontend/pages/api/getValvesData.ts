@@ -5,9 +5,9 @@ type Data = {
     name: string
 }
 
-const login: NextApiHandler = async (req, res) => {
+const getValvesData: NextApiHandler = async (req, res) => {
     const result = await axios.get(`${process.env.BACKEND_API_URL}/valves`);
     res.status(200).send(result.data);
 }
 
-export default login;
+export default getValvesData
