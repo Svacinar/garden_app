@@ -27,9 +27,9 @@ jobs:
         run: |
           docker buildx build \
             --tag ghcr.io/svacinar/garden_app_backend:latest \
-            --platform=linux/amd64,linux/arm32/v7 --push ./garden_app_backend
-    - name: build backend image
+            --platform=linux/arm/v7 --push ./garden_app_backend
+      - name: build frontend image
         run: |
           docker buildx build \
             --tag ghcr.io/svacinar/garden_app_frontend:latest \
-            --platform=linux/amd64,linux/arm32/v7 --push ./garden_app_frontend
+            --platform=linux/arm/v7 --push ./garden_app_frontend
