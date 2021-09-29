@@ -23,7 +23,7 @@ export default function ValveItem(props: ValveItemProps) {
                 <Tr>
                     <Td>{props.valve.name}</Td>
                     <Td data-testid={'valveState' + props.id}>{renameProp(props.valve.status)}</Td>
-                    <Td>{props.valve.timer}</Td>
+                    <Td>{props.valve.timer / 60000} min</Td>
                     <Td>{props.valve.endpoint}</Td>
                     <Td>
                         <Switch isChecked={props.valve.status} data-testid={'valveSwitch' + props.id} aria-label={'valve-toggle' + props.id} colorScheme='teal' size='lg' onChange={() => props.handleStateChange(props.valve, props.id)} />

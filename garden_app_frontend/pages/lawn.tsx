@@ -1,7 +1,6 @@
 import {
     Flex,
     Heading,
-
 } from '@chakra-ui/react';
 import axios from 'axios';
 import ValveTable from '../components/ValveTable';
@@ -29,24 +28,28 @@ const Lawn: NextPage = () => {
         }
     }
 
-    const handleStateChange = (valve: Valve, id: number) => {
+    const handleStateChange = async (valve: Valve, id: number) => {
         const newValveState = {
             valveId: id,
             state: !valve.status,
             timer: valve.timer,
         };
         const endpoint = valve.endpoint;
-        axios.post('api/setValveState', {
+        await axios.post('api/setValveState', {
             newValveState,
             endpoint,
+        });
+    }
+    const handleTimerChange = async (timer: number) => {
+        await axios.post('api/setTimer', {
+            timer,
         });
     }
 
     return (
         <Flex height="80vh" alignItems="center" justifyContent="center">
             <Flex alignItems="center" direction="column" border='5px solid' borderColor='gray.100' p={12} rounded={6}>
-                {console.log(valveData)}
-                {isLoaded ? <ValveTable valveData={valveData} handleStateChange={handleStateChange} />
+                {isLoaded ? <ValveTable valveData={valveData} handleStateChange={handleStateChange} handleTimerChange={handleTimerChange} />
                     : isError ? <Heading size='md'>Something went wrong...</Heading>
                         : <Heading size='md'>Loading data...</Heading>}
             </Flex >
