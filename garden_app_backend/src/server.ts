@@ -3,6 +3,9 @@ import ConnectionManager from './domain/services/ConnectionManager';
 import ValveManager from './domain/services/ValveManager';
 import ConnectionRepository from './infrastructure/repository/ConnectionRepository';
 import bodyParser from 'body-parser';
+import { Logger } from './infrastructure/logger/logger';
+
+const logger = new Logger(module);
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,7 +16,7 @@ const valveManager = new ValveManager();
 const connectionManager = new ConnectionManager({ connectionRepository });
 
 app.listen(3000, () => {
-    console.log('GARDEN_APP_API LISTENING ON PORT 3000');
+    logger.log('GARDEN_APP_API LISTENING ON PORT 3000');
 });
 
 app.get('/valves', async (req: Request, res: Response) => {

@@ -4,12 +4,10 @@ WORKDIR /usr/garden_app_backend
 
 COPY ./package.*json ./
 
-RUN npm install npm@latest
-
-RUN npm install typescript -g
-
-RUN npm install 
+RUN npm install npm@latest && npm install typescript -g && npm install
 
 COPY . .
+
+RUN tsc
 
 CMD ["node", "./dist/server.js"]
