@@ -15,7 +15,7 @@ class ValveManager {
     async initializeValveConnections(connections: Array<Connection>) {
         for (const connection of connections) {
             try {
-                const response: AxiosResponse = await axios.get<any>(`http://${connection.endpoint}/`);
+                const response: AxiosResponse<any> = await axios.get<any>(`http://${connection.endpoint}/`);
                 const data = response.data;
                 const valveData: Valve[] = [];
                 Object.keys(data).forEach((valve) => {
