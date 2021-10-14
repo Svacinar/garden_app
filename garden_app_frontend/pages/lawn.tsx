@@ -13,7 +13,7 @@ const Lawn: NextPage = () => {
     const [isError, setIsError] = useState(false);
     const [valveData, setValveData]: [any, any] = useState({});
     useEffect(() => {
-        const intervalId = setInterval(stateUpdater, 2000);
+        const intervalId = setInterval(stateUpdater, 5000);
         return () => clearInterval(intervalId);
     }, []);
 
@@ -25,6 +25,7 @@ const Lawn: NextPage = () => {
             setIsLoaded(true);
         } catch (error) {
             setIsError(true);
+            setIsLoaded(false);
         }
     }
 
@@ -48,7 +49,7 @@ const Lawn: NextPage = () => {
 
     return (
         <Flex height="80vh" alignItems="center" justifyContent="center">
-            <Flex alignItems="center" direction="column" border='5px solid' borderColor='gray.100' p={12} rounded={6}>
+            <Flex alignItems="center" direction="column" border='5px solid' borderColor='gray.100' p={6} rounded={6}>
                 {isLoaded ? <ValveTable valveData={valveData} handleStateChange={handleStateChange} handleTimerChange={handleTimerChange} />
                     : isError ? <Heading size='md'>Something went wrong...</Heading>
                         : <Heading size='md'>Loading data...</Heading>}
