@@ -1,11 +1,7 @@
 import type { NextPage } from 'next';
 import { Flex, Heading, Button, Input } from '@chakra-ui/react';
-import useSWR from 'swr';
-
 
 const handleLogin = async (e: Event) => {
-    console.log(e.target);
-    console.log('fetch');
     fetch('/api/login')
         .then(response => response.json())
         .then(data => console.log(data.server));
