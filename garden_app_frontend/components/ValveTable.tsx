@@ -74,7 +74,7 @@ export default function ValveTable({ valveData, handleStateChange, handleTimerCh
                                     {
                                         data[connection].map((valve: Valve, id: number) => {
                                             return (
-                                                <Button onClick={() => handleJobAddition(valve)}>{valve.name}</Button>
+                                                <Button key={id} onClick={() => handleJobAddition(valve)}>{valve.name}</Button>
                                             )
                                         })
                                     }
@@ -111,7 +111,6 @@ export default function ValveTable({ valveData, handleStateChange, handleTimerCh
                                     </Tr>
                                 </Thead>
                                 {data[connection].map((valve: Valve, id: number) => {
-                                    const checked = (valve.status === 'true' || valve.status === true) ? true : false;
                                     return (
                                         <ValveItem key={id} id={id} valve={valve} handleStateChange={handleStateChange} />
                                     )
