@@ -3,6 +3,7 @@
 import React, { ReactChildren, ReactChild, useState } from 'react';
 import {
     Button,
+    Stack,
     Input,
     InputGroup,
     InputLeftAddon,
@@ -95,7 +96,7 @@ export default function ValveTable({ valveData, handleStateChange, handleTimerCh
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            <Flex data-testid="connection-table">
+            <Stack direction='column'>
                 {Object.keys(data).map((connection, id) => {
                     return (
                         <div key={id}>
@@ -116,18 +117,18 @@ export default function ValveTable({ valveData, handleStateChange, handleTimerCh
                                     )
                                 })}
                             </Table>
-                            <Flex margin='15px' >
-                                <InputGroup mr='4'>
-                                    <InputLeftAddon children='Set timer to: ' />
-                                    <Input onChange={(e) => setTimer(e.target.value)} />
-                                    <InputRightAddon children='minutes' />
-                                </InputGroup>
-                                <Button onClick={() => handleTimerChange(timer)} rightIcon={< CheckIcon />} >SET</Button>
-                                <Button margin='15px' mt='0' onClick={onOpen}>CYCLE</Button>
-                            </Flex>
                         </div>
                     )
                 })}
-            </Flex>
+                <Flex margin='15px' >
+                    <InputGroup mr='4'>
+                        <InputLeftAddon children='Set timer to: ' />
+                        <Input onChange={(e) => setTimer(e.target.value)} />
+                        <InputRightAddon children='minutes' />
+                    </InputGroup>
+                    <Button onClick={() => handleTimerChange(timer)} rightIcon={< CheckIcon />} >SET</Button>
+                    <Button margin='15px' mt='0' onClick={onOpen}>CYCLE</Button>
+                </Flex>
+            </Stack>
         </>)
 }
