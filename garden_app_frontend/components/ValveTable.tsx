@@ -16,6 +16,7 @@ import {
     Th,
     TableCaption,
     useDisclosure,
+    Spacer,
     ModalOverlay,
     Modal,
     ModalHeader,
@@ -32,9 +33,16 @@ import axios from 'axios';
 export default function ValveTable({ valveData, handleStateChange, handleTimerChange }: { handleStateChange: (valve: Valve, id: number) => void, valveData: any, handleTimerChange: (timer: number) => void }) {
     const [timer, setTimer] = useState(0);
     const [jobs, setJobs] = useState([]);
+    const [endpoint, setEndpoint] = useState('');
+    const [name, setName] = useState('');
     const data = valveData;
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: isOpenConnectionModal,
+        onOpen: onOpenConnectionModal,
+        onClose: onCloseConnectionModal,
+    } = useDisclosure();
 
     //TODO cancel remote jobs
 
@@ -57,11 +65,32 @@ export default function ValveTable({ valveData, handleStateChange, handleTimerCh
         job.endpoint = `${valve.endpoint}/valve`
         setJobs([...jobs, job])
     }
+
+    const handleRemoteAddition = (e: Event) => {
+        e.preventDefault();
+        //TODO add job to backend
+        console.log(`Add connection endpoint: ${endpoint} with name ${name}`)
+    }
     return (
-        <>
-            <Flex alignItems='center'>
+        <Stack>
+            <Flex alignItems='center' >
+                <Spacer />
                 <Heading size='md'>REMOTE CONTROL PANEL</Heading>
+                <Spacer />
+                <Button onClick={onOpenConnectionModal}>+</Button>
             </Flex>
+            <Modal isOpen={isOpenConnectionModal} onClose={onCloseConnectionModal} isCentered>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Add Remote Connection</ModalHeader>
+                    <ModalCloseButton />
+                    <Flex direction="column" p={5} rounded={6}>
+                        <Input placeholder="Connection name" variant="filed" mb={3} type="text" onChange={(e) => { console.log(e.target.value); setName(e.target.value) }} />
+                        <Input placeholder="Endpoint" variant='filed' mb={6} type="text" onChange={(e) => setEndpoint(e.target.value)} />
+                        <Button colorScheme="teal" onClick={handleRemoteAddition}>Add Connection</Button>
+                    </Flex>
+                </ModalContent>
+            </Modal>
 
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay />
@@ -130,5 +159,5 @@ export default function ValveTable({ valveData, handleStateChange, handleTimerCh
                     <Button margin='15px' mt='0' onClick={onOpen}>CYCLE</Button>
                 </Flex>
             </Stack>
-        </>)
+        </Stack >)
 }
