@@ -6,6 +6,7 @@ import { RemoteJobDispatcher } from './domain/services/RemoteJobDispatcher';
 import bodyParser from 'body-parser';
 import { Logger } from './infrastructure/logger/logger';
 import { Valve } from './domain/entities/valve';
+import Connection from './domain/interface/IConnection';
 
 const logger = new Logger(module);
 
@@ -38,9 +39,20 @@ app.put('/timer', async (req: Request, res: Response) => {
     await valveManager.setTimer(timer);
     res.status(204).send();
 })
+app.get('/connection', async (req: Request, res: Response) => {
+    const connections = connectionManager.getConnections();
+    res.json(connections);
+})
+app.put('/connection', async (req: Request, res: Response) => {
+    const connection: Connection = {
+        endpoint: req.body.endpoint,
+        name: req.body.name
+    };
+    await connectionManager.saveConnection(connection);
+    res.status(204).send();
+})
 
 app.post('/queue', async (req: Request, res: Response) => {
-    logger.info(JSON.stringify(req.body));
     req.body.valves.forEach((valve: Valve) => {
         const job = remoteJobDispatcher.createValveJob(valve);
         remoteJobDispatcher.addToQueue(job);
@@ -48,4 +60,9 @@ app.post('/queue', async (req: Request, res: Response) => {
     remoteJobDispatcher.processQueue();
     res.status(204).send();
 });
+
+app.delete('/queue', async (req: Request, res: Response) => {
+    remoteJobDispatcher.cancelQueue();
+    res.status(204).send();
+})
 

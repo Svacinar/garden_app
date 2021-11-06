@@ -36,6 +36,11 @@ class RemoteJobDispatcher {
         this.processing = false;
     }
 
+    cancelQueue() {
+        this.queue = [];
+        this.logger.info('Queue cleared');
+    }
+
     async dispatchJob(job: Job) {
         try {
             await job.execute();

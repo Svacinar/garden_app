@@ -14,6 +14,10 @@ class ConnectionManager {
         data.forEach(connection => this.connections.push(connection));
         return this.connections;
     }
+    async saveConnection(connection: Connection) {
+        this.connections.push(connection);
+        await this.connectionRepository.saveConnections(connection);
+    }
 }
 
 export default ConnectionManager;
