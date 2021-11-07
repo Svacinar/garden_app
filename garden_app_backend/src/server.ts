@@ -7,8 +7,12 @@ import bodyParser from 'body-parser';
 import { Logger } from './infrastructure/logger/logger';
 import { Valve } from './domain/entities/valve';
 import Connection from './domain/interface/IConnection';
+import { makeNotFoundMiddleware } from './infrastructure/middleware/notFoundMiddleware';
+import { errorMiddleware } from './infrastructure/middleware/errorMiddleware';
 
 const logger = new Logger(module);
+
+const notFoundMiddleware = makeNotFoundMiddleware({ logger });
 
 const app = express();
 app.use(bodyParser.json());
@@ -65,4 +69,7 @@ app.delete('/queue', async (req: Request, res: Response) => {
     remoteJobDispatcher.cancelQueue();
     res.status(204).send();
 })
+
+app.use('*', notFoundMiddleware);
+app.use(errorMiddleware);
 
