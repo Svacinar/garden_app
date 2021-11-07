@@ -1,4 +1,4 @@
-import express, { Request, Response, } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import ConnectionManager from './domain/services/ConnectionManager';
 import ValveManager from './domain/services/ValveManager';
 import ConnectionRepository from './infrastructure/repository/ConnectionRepository';
@@ -9,13 +9,9 @@ import { Valve } from './domain/entities/valve';
 import Connection from './domain/interface/IConnection';
 import { makeNotFoundMiddleware } from './infrastructure/middleware/notFoundMiddleware';
 import { errorMiddleware } from './infrastructure/middleware/errorMiddleware';
+import { makeReqresMiddleware } from './infrastructure/middleware/reqresMiddleware';
 
 const logger = new Logger(module);
-
-const notFoundMiddleware = makeNotFoundMiddleware({ logger });
-
-const app = express();
-app.use(bodyParser.json());
 
 const connectionRepository = new ConnectionRepository();
 
@@ -23,6 +19,15 @@ const valveManager = new ValveManager();
 const connectionManager = new ConnectionManager({ connectionRepository });
 
 const remoteJobDispatcher = new RemoteJobDispatcher(logger); //TODO module name
+
+const notFoundMiddleware = makeNotFoundMiddleware({ logger });
+const reqresMiddleware = makeReqresMiddleware({ logger });
+
+const app = express();
+
+app.use(bodyParser.json());
+app.use(errorMiddleware);
+app.use(reqresMiddleware);
 
 app.listen(3000, () => {
     logger.log('GARDEN_APP_API LISTENING ON PORT 3000');
@@ -71,5 +76,3 @@ app.delete('/queue', async (req: Request, res: Response) => {
 })
 
 app.use('*', notFoundMiddleware);
-app.use(errorMiddleware);
-
