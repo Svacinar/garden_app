@@ -1,16 +1,12 @@
 import axios from "axios";
-import { ILogger } from './IServiceLogger';
+import { ILogger } from '../interface/IServiceLogger';
 import { timeout } from "../../infrastructure/utilities/utils";
 import { Valve } from "../entities/valve";
 import config from '../../config/config';
+import { IJobDispatcher, IJob } from "../interface/IJobDispatcher";
 
-interface Job {
-    endpoint: string,
-    execute: () => Promise<void>,
-};
-
-class RemoteJobDispatcher {
-    queue: Job[];
+class RemoteJobDispatcher implements IJobDispatcher {
+    queue: IJob[];
     processing: boolean;
     logger: ILogger;
 
@@ -41,7 +37,7 @@ class RemoteJobDispatcher {
         this.logger.info('Queue cleared');
     }
 
-    async dispatchJob(job: Job) {
+    async dispatchJob(job: IJob) {
         try {
             await job.execute();
         } catch (error: any) {
@@ -49,13 +45,13 @@ class RemoteJobDispatcher {
         }
     }
 
-    addToQueue(job: Job) {
+    addToQueue(job: IJob) {
         this.queue.push(job);
         this.logger.log(`${JSON.stringify(job)} added to queue`);
     }
 
     createValveJob(valve: Valve) {
-        const job: Job = {
+        const job: IJob = {
             endpoint: valve.endpoint,
             execute: async () => {
                 this.logger.log(valve.endpoint);
@@ -73,7 +69,5 @@ class RemoteJobDispatcher {
         return job;
     }
 }
-
-export { RemoteJobDispatcher, Job as IJob }
 
 export default RemoteJobDispatcher;

@@ -1,8 +1,7 @@
-import Connection from "../../domain/interface/IConnection";
-import IConnectionRepository from "../../domain/interface/IConnectionRepository";
+import { IConnection, IConnectionRepository } from "../../domain/interface/IConnection";
 
 export default class ConnectionRepository implements IConnectionRepository {
-    private result: Array<Connection>;
+    private result: Array<IConnection>;
     constructor() {
         this.result = [
             { name: 'Connnection 2', endpoint: '192.168.0.102' },
@@ -11,7 +10,7 @@ export default class ConnectionRepository implements IConnectionRepository {
     getConnections = () => {
         return this.result;
     }
-    saveConnections = async (connection: Connection) => {
+    saveConnections = async (connection: IConnection) => {
         this.result.push(connection);
     }
 }

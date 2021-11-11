@@ -1,9 +1,8 @@
-import Connection from "../interface/IConnection";
-import IConnectionRepository from "../interface/IConnectionRepository";
+import { IConnectionRepository, IConnection } from "../interface/IConnection";
 
 class ConnectionManager {
     private connectionRepository;
-    private connections: Array<Connection>;
+    private connections: Array<IConnection>;
     constructor({ connectionRepository }: { connectionRepository: IConnectionRepository }) {
         this.connections = [];
         this.connectionRepository = connectionRepository;
@@ -14,7 +13,7 @@ class ConnectionManager {
         data.forEach(connection => this.connections.push(connection));
         return this.connections;
     }
-    async saveConnection(connection: Connection) {
+    async saveConnection(connection: IConnection) {
         this.connections.push(connection);
         await this.connectionRepository.saveConnections(connection);
     }

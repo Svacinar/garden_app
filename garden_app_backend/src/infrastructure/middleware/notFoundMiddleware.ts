@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ILogger } from "../../domain/services/IServiceLogger";
+import { ILogger } from "../../domain/interface/IServiceLogger";
 import { ErrorException } from "./errorException";
 
 export const makeNotFoundMiddleware = ({ logger }: { logger: ILogger }) => (

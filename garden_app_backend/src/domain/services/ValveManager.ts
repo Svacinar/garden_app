@@ -1,5 +1,5 @@
 import { Valve } from '../entities/valve'
-import Connection from '../interface/IConnection';
+import { IConnection } from '../interface/IConnection';
 
 import axios, { AxiosResponse } from 'axios';
 
@@ -12,7 +12,7 @@ class ValveManager {
         this.timer = DEFAULT_TIMER;
         this.valves = {};
     };
-    async initializeValveConnections(connections: Array<Connection>) {
+    async initializeValveConnections(connections: Array<IConnection>) {
         for (const connection of connections) {
             try {
                 const response: AxiosResponse<any> = await axios.get<any>(`http://${connection.endpoint}/`);
